@@ -172,15 +172,18 @@ class PrintingPrinter(models.Model):
         _logger.debug(
             'Sending job to CUPS printer %s on %s'
             % (self.system_name, self.server_id.address))
-        connection.printFile(self.system_name,
-                             file_name,
-                             file_name,
-                             options=options)
-        _logger.info("Printing job: '%s' on %s" % (
+        job_id = connection.printFile(
+            self.system_name,
+            file_name,
+            file_name,
+            options=options
+        )
+        _logger.info("Printing job %d: '%s' on %s" % (
+            job_id,
             file_name,
             self.server_id.address,
         ))
-        return True
+        return job_id
 
     @api.multi
     def set_default(self):
